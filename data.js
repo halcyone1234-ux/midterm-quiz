@@ -147,7 +147,7 @@
   window.MQ = {
     CHOICES, STATUS_LABEL, DEFAULT_GAME, LS, deviceId, classId, backend, toArray,
     parseBankText, formatBankText, toScore,
-    DEFAULT: window.MQ_DEFAULT || { title: '複習競賽', questions: [] },
+    DEFAULT: window.MQ_DEFAULT || { title: '考前複習', questions: [] },
     adminPin: String((window.MQ_CONFIG && window.MQ_CONFIG.adminPin) || '1151'),
     siteUrl() {
       const base = location.origin + location.pathname.replace(/[^/]*$/, '');

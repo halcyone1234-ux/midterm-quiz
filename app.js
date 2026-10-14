@@ -1,4 +1,4 @@
-/* 期中複習競賽：路由與各畫面（學生 #join、投影 #board、老師 #admin） */
+/* 期中考前複習：路由與各畫面（學生 #join、投影 #board、老師 #admin） */
 (function () {
   'use strict';
   const Z = window.MQ;
@@ -92,7 +92,7 @@
     start() {
       const g = game(); const n = bank().questions.length;
       if (!n) { toast('題庫是空的'); return; }
-      const run = g.status === 'lobby' ? g.run : g.run + 1; /* 從成績頁再比一次＝新的一局 */
+      const run = g.status === 'lobby' ? g.run : g.run + 1; /* 從成績頁再做一次＝新的一輪 */
       B.update('game', Object.assign({ status: 'question', index: 0, run }, stamp()));
     },
     end() { B.update('game', Object.assign({ status: 'reveal' }, stamp())); },
@@ -115,11 +115,11 @@
     const g = game(); const n = bank().questions.length; const isLast = g.index + 1 >= n;
     const btn = (label, fn, cls) => h('button', { class: cls || '', onclick: fn }, label);
     const items = [];
-    if (g.status === 'lobby') items.push(btn('▶ 開始競賽', A.start, 'primary big'));
+    if (g.status === 'lobby') items.push(btn('▶ 開始複習', A.start, 'primary big'));
     else if (g.status === 'question') { items.push(btn('⏹ 結束作答，公佈答案', A.end, 'primary big warn')); items.push(btn('提早結束看成績', A.finish, 'small')); }
     else if (g.status === 'reveal') { items.push(btn(isLast ? '🏁 看成績' : '下一題 →', A.next, 'primary big')); if (!isLast) items.push(btn('提早結束看成績', A.finish, 'small')); }
     else if (g.status === 'recap') items.push(btn('← 回成績頁', A.results, 'primary big'));
-    else if (g.status === 'finished') { items.push(btn('🔁 再比一次', A.start, 'primary')); items.push(btn('回大廳', A.lobby, '')); }
+    else if (g.status === 'finished') { items.push(btn('🔁 再做一次', A.start, 'primary')); items.push(btn('回大廳', A.lobby, '')); }
     return h('div', { class: 'ctrl-bar' }, items);
   }
 
@@ -188,7 +188,7 @@
         };
         input.addEventListener('keydown', (e) => { if (e.key === 'Enter') join(); });
         mount(root, h('div', { class: 'card stack' },
-          h('p', { class: 'eyebrow' }, '期中複習競賽'), h('h1', null, bk.title),
+          h('p', { class: 'eyebrow' }, '期中考前複習'), h('h1', null, bk.title),
           h('p', { class: 'muted' }, '共 ' + qs.length + ' 題四選一。輸入一個 ID 進場，老師開始後題目會直接出現在這裡。'),
           h('label', { class: 'field' }, h('span', null, '你的 ID'), input),
           h('button', { class: 'primary block', onclick: join }, '進場'),
@@ -198,8 +198,8 @@
       const top = h('div', { class: 'row between' }, h('span', { class: 'muted' }, '👤 ' + me.name), h('button', { class: 'small', onclick: () => { me.name = ''; LS.set('mq.name', ''); render(); } }, '改 ID'));
       if (g.status === 'lobby') {
         mount(root, top, h('div', { class: 'card stack center' },
-          h('div', { style: 'font-size:3rem' }, '🏆'), h('h1', null, bk.title),
-          h('p', { class: 'muted' }, '共 ' + qs.length + ' 題四選一。等待老師按下「開始競賽」…'),
+          h('div', { style: 'font-size:3rem' }, '📝'), h('h1', null, bk.title),
+          h('p', { class: 'muted' }, '共 ' + qs.length + ' 題四選一。等待老師按下「開始複習」…'),
           h('p', { class: 'muted' }, '已進場 ' + players().length + ' 人')));
         return;
       }
@@ -241,7 +241,7 @@
         h('div', { class: 'score-card' },
           h('div', { class: 'score-label' }, answered ? '你的分數' : '你沒有參加這一輪'),
           h('div', { class: 'score-num num' }, answered ? Z.toScore(myCorrect, total) : '—'),
-          h('div', { class: 'score-sub' }, (answered ? '答對 ' + myCorrect + ' / ' + total + ' 題' : '共 ' + total + ' 題') + (beat !== null ? ' · 贏過 ' + beat + '% 的同學' : '')),
+          h('div', { class: 'score-sub' }, (answered ? '答對 ' + myCorrect + ' / ' + total + ' 題' : '共 ' + total + ' 題')),
           h('div', { class: 'score-avg' }, '全班平均 ' + Z.toScore(r.avg, total) + ' 分（' + r.participants + ' 人作答）')),
         h('div', { class: 'card stack' },
           h('h3', null, '全班答對題數分佈'), histogram(r.dist, answered ? myCorrect : null),
@@ -271,7 +271,7 @@
       const g = game(); const bk = bank(); const qs = bk.questions; const ps = players();
       const admin = isAdmin();
       mount(root, h('div', { class: 'row between' },
-        h('div', null, h('p', { class: 'eyebrow' }, '期中複習競賽'), h('h1', null, bk.title)),
+        h('div', null, h('p', { class: 'eyebrow' }, '期中考前複習'), h('h1', null, bk.title)),
         h('div', { class: 'row' },
           h('span', { class: 'phase-pill live' }, Z.STATUS_LABEL[g.status] || g.status),
           h('span', { class: 'phase-pill' }, '已進場 ' + ps.length + ' 人'),
@@ -283,7 +283,7 @@
           h('div', { class: 'card stack' },
             h('h2', null, '掃碼進場'), h('div', { class: 'big num' }, ps.length), h('p', { class: 'muted' }, '人已進場 · 共 ' + qs.length + ' 題'),
             h('div', { class: 'chips' }, ps.map((p) => h('span', { class: 'tag', style: 'font-size:1rem' }, p.name))),
-            admin ? controlBar() : h('p', { class: 'muted' }, '老師請到控制台按「開始競賽」'),
+            admin ? controlBar() : h('p', { class: 'muted' }, '老師請到控制台按「開始複習」'),
           ),
         ));
         if (!qrDone) { qr(260); qrDone = true; }
@@ -349,7 +349,7 @@
         h('div', { class: 'card stack' },
           h('div', { class: 'row between' },
             h('div', null, h('span', { class: 'phase-pill live' }, Z.STATUS_LABEL[g.status]), ' ',
-              g.status !== 'lobby' && g.status !== 'finished' && q ? h('b', null, '第 ' + (g.index + 1) + ' / ' + qs.length + ' 題') : h('span', { class: 'muted' }, qs.length + ' 題 · 第 ' + g.run + ' 局')),
+              g.status !== 'lobby' && g.status !== 'finished' && q ? h('b', null, '第 ' + (g.index + 1) + ' / ' + qs.length + ' 題') : h('span', { class: 'muted' }, qs.length + ' 題 · 第 ' + g.run + ' 輪')),
             h('span', { class: 'muted' }, '已進場 ' + ps.length + ' 人' + (g.status === 'question' ? ' · 已回答 ' + sum(countsAt(g, g.index)) : ''))),
           q && g.status !== 'lobby' && g.status !== 'finished' ? h('p', { class: 'q-text' }, q.text + '　（正解 ' + q.answer + '）') : null,
           controlBar(),
@@ -359,14 +359,14 @@
             h('div', { class: 'row between' }, h('h2', null, '題庫'), h('div', { class: 'row' },
               h('button', { class: 'small', onclick: () => { editing = !editing; draft = null; render(); } }, editing ? '收起' : '✏️ 編輯'),
               h('button', { class: 'small', onclick: () => { if (confirm('載回預設 25 題？')) A.useDefault().then(() => toast('已載回預設題庫')); } }, '載回預設 25 題'))),
-            h('p', { class: 'muted' }, qs.length + ' 題' + (bk.isDefault ? '（預設：期中考複習卷）' : '（自訂）') + '。' + (g.status === 'lobby' ? '' : '進行中改題會立刻影響目前這局，建議回大廳再改。')),
+            h('p', { class: 'muted' }, qs.length + ' 題' + (bk.isDefault ? '（預設：期中考複習卷）' : '（自訂）') + '。' + (g.status === 'lobby' ? '' : '進行中改題會立刻影響目前這輪，建議回大廳再改。')),
             editing ? bankEditor() : h('ol', { class: 'bank-list' }, qs.map((x, i) => h('li', null, h('b', null, 'Q' + (i + 1) + ' '), h('span', { class: 'muted' }, x.section ? x.section + '｜' : ''), x.text, h('span', { class: 'tag' }, '答 ' + x.answer)))),
           ),
           h('div', { class: 'card stack' },
             h('div', { class: 'row between' }, h('h2', null, '學生與成績'), h('div', { class: 'row' },
               h('button', { class: 'small', onclick: exportXlsx }, '⬇ Excel'),
               h('button', { class: 'small danger', onclick: () => { if (confirm('清空進場名單、所有作答與進度？題庫會保留。')) A.clearAll().then(() => toast('已清空')); } }, '清空'))),
-            h('p', { class: 'muted' }, '本局 ' + r.participants + ' 人作答 · 平均 ' + Z.toScore(r.avg, r.total) + ' 分'),
+            h('p', { class: 'muted' }, '本輪 ' + r.participants + ' 人作答 · 平均 ' + Z.toScore(r.avg, r.total) + ' 分'),
             h('div', { class: 'table-wrap' }, h('table', { class: 'data' },
               h('thead', null, h('tr', null, h('th', null, 'ID'), h('th', { class: 'num' }, '已答'), h('th', { class: 'num' }, '答對'), h('th', { class: 'num' }, '分數'))),
               h('tbody', null, ps.map((p) => {
@@ -409,7 +409,7 @@
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), '成績');
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(qrows), '題目');
-      XLSX.writeFile(wb, '期中複習競賽_' + Z.classId + '_第' + g.run + '局.xlsx');
+      XLSX.writeFile(wb, '期中考前複習_' + Z.classId + '_第' + g.run + '輪.xlsx');
     }
     render();
     return render;
