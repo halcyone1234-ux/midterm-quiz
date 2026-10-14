@@ -1,0 +1,56 @@
+{
+  "rules": {
+    "classes": {
+      "$classId": {
+        ".read": true,
+        ".write": false,
+        "session": { ".write": true },
+        "survey": { ".write": true },
+        "joined": {
+          "$deviceId": { ".write": true, ".validate": "!newData.exists() || (newData.hasChildren(['id', 'sign']) && newData.child('id').val().length <= 20)" }
+        },
+        "dimensions": {
+          "$id": { ".write": true, ".validate": "!newData.exists() || (newData.hasChildren(['concept', 'name']) && newData.child('name').isString() && newData.child('name').val().length <= 100)" }
+        },
+        "questions": {
+          "$id": { ".write": true, ".validate": "!newData.exists() || (newData.hasChildren(['text', 'type', 'concept']) && newData.child('text').isString() && newData.child('text').val().length <= 500)" }
+        },
+        "votes": {
+          "$questionId": {
+            "$deviceId": { ".write": true, ".validate": "!newData.exists() || newData.child('note').val().length <= 300" }
+          }
+        },
+        "responses": {
+          "$respId": {
+            ".write": "!data.exists() || data.child('deviceId').val() === newData.child('deviceId').val() || !newData.exists()",
+            ".validate": "!newData.exists() || newData.hasChildren(['round', 'mySign', 'answers', 'deviceId'])"
+          }
+        }
+      }
+    },
+    "quiz": {
+      "$classId": {
+        ".read": true,
+        ".write": false,
+        "game": { ".write": true },
+        "bank": { ".write": true },
+        "players": {
+          ".write": "!newData.exists()",
+          "$deviceId": { ".write": true, ".validate": "!newData.exists() || (newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length <= 20)" }
+        },
+        "answers": {
+          ".write": "!newData.exists()",
+          "$run": {
+            ".write": "!newData.exists()",
+            "$index": {
+              "$deviceId": {
+                ".write": "!data.exists()",
+                ".validate": "newData.hasChildren(['choice']) && newData.child('choice').val().matches(/^[ABCD]$/)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
