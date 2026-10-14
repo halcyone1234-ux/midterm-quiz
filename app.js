@@ -234,7 +234,6 @@
       const r = results(); const total = r.total; const myCorrect = r.scores[Z.deviceId];
       const answered = myCorrect !== undefined;
       const scores = Object.values(r.scores);
-      const beat = answered && scores.length ? Math.round((scores.filter((s) => s < myCorrect).length / scores.length) * 100) : null;
       const mineMap = r.mine[Z.deviceId] || {};
       const wrong = answered ? r.perQ.filter((p) => mineMap[p.index] !== p.answer).map((p) => Object.assign({ mine: mineMap[p.index] || '—' }, p)) : [];
       return h('div', { class: 'stack' },
