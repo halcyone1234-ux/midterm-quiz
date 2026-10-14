@@ -116,8 +116,8 @@
     const btn = (label, fn, cls) => h('button', { class: cls || '', onclick: fn }, label);
     const items = [];
     if (g.status === 'lobby') items.push(btn('▶ 開始複習', A.start, 'primary big'));
-    else if (g.status === 'question') { items.push(btn('⏹ 結束作答，公佈答案', A.end, 'primary big warn')); items.push(btn('提早結束看成績', A.finish, 'small')); }
-    else if (g.status === 'reveal') { items.push(btn(isLast ? '🏁 看成績' : '下一題 →', A.next, 'primary big')); if (!isLast) items.push(btn('提早結束看成績', A.finish, 'small')); }
+    else if (g.status === 'question') items.push(btn('⏹ 結束作答，公佈答案', A.end, 'primary big warn'));
+    else if (g.status === 'reveal') items.push(btn(isLast ? '🏁 看成績' : '下一題 →', A.next, 'primary big'));
     else if (g.status === 'recap') items.push(btn('← 回成績頁', A.results, 'primary big'));
     else if (g.status === 'finished') { items.push(btn('🔁 再做一次', A.start, 'primary')); items.push(btn('回大廳', A.lobby, '')); }
     return h('div', { class: 'ctrl-bar' }, items);
